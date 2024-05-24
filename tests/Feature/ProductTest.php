@@ -17,7 +17,8 @@ class ProductTest extends TestCase
         parent::setUp();
      $this->user =    User::factory()->create([
             'email' => 'admin@gmail.com',
-            'password' => bcrypt('password1234')
+            'password' => bcrypt('password1234'),
+             'is_admin' => 1
         ]);
     }
     /**
@@ -87,6 +88,55 @@ class ProductTest extends TestCase
 
         $response->assertDontSee($products->last()->name);
         $response->assertStatus(200);
+
+    }
+
+    public function test_admin_can_see_product_create_button()
+    {
+        $admin_user = User::factory()->create([
+            'email' => 'md@gmail.com',
+            'password' =>  bcrypt('password'),
+            'is_admin' => 1
+        ]);
+
+        $response = $this->actingAs($admin_user)->get('products');
+
+        $response->assertStatus(200);
+        $response->assertSee('Add New Product');
+
+    }
+    public function test_non_admin_can_not_see_product_create_button()
+    {
+
+        $response = $this->actingAs($this->user)->get('products');
+
+        $response->assertStatus(200);
+        $response->assertSee('Add New Product');
+//        $response->assertDontSee('Add New Product');
+
+    }
+    public function test_admin_can_access_products_create_page()
+    {
+        $admin_user = User::factory()->create(['is_admin' => 1]);
+
+        $response = $this->actingAs($admin_user)->get('products/create');
+
+        $response->assertStatus(200);
+        $response->assertSee('Product Add');
+
+    }
+    public function test_product_exists_in_database()
+    {
+       $response =  $this->actingAs($this->user)->post('products',['name' => 'New Product' , 'price' => 1111]);
+        $response->assertRedirect('products');
+
+        $this->assertDatabaseHas('products',['name' => 'New Product' , 'price' => 1111]);
+
+        $product = Product::orderBy('id','desc')->first();
+
+        $this->assertEquals('New Product', $product->name);
+        $this->assertEquals(1111, $product->price);
+
 
     }
 }
