@@ -177,6 +177,10 @@ class ProductTest extends TestCase
 
         $response->assertStatus(422);
     }
+    /***
+     * @group  approved
+     */
+
     public function test_delete_product_no_longer_exist_in_db()
     {
         $product = Product::factory()->create(['name' => 'N', 'price' => 1111]);
