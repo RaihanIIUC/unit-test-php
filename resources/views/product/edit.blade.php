@@ -11,6 +11,8 @@
 
                         <form action="{{ route('products.update',$product->id) }}" method="post" >
                             @csrf
+                            @method('PUT')
+
                             <div class="form-group">
                                 <label for="exampleInputEmail1">Name</label>
                                 <input type="name" value="{{ $product->name }}" class="form-control" id="name" name="name" aria-describedby="emailHelp" placeholder="Enter Name">
