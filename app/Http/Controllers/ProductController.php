@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductUpdateRequest;
+use App\Models\Order;
+use App\Models\OrderItemTopping;
 use App\Models\Product;
+use App\Models\ProductBatch;
+use App\Services\PriceCalculatorService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -13,12 +17,14 @@ class ProductController extends Controller
      */
     public function index()
     {
-//        $product = Product::create([
-//            'name' => 'Sono ggggggggg',
-//            'price' => 99
-//        ]);
-        $products = Product::all();
 
+        $products = Product::with('batch')->get();
+//        dd($products->toArray());
+
+
+        $price = (new PriceCalculatorService())->calculatePrice(1);
+
+        dd($price);
         return view('home',compact('products'));
     }
 

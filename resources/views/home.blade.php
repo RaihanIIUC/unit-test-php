@@ -24,6 +24,7 @@
                                 <th scope="col">Sl</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Price</th>
+                                <th scope="col">Price Type</th>
                                 <th scope="col">Eur Price</th>
                                 <th scope="col">Action</th>
                             </tr>
@@ -34,6 +35,7 @@
                                     <th scope="row">{{ $product->id }}</th>
                                     <td>{{ $product->name }}</td>
                                     <td>{{ $product->price }}</td>
+                                    <td>{{ $product->price_type }}</td>
                                     <td>{{ $product->price_eur }}</td>
                                     <td>
                                         <a href="{{ route('products.edit',$product->id) }}" class="btn btn-success" >edit</a>
